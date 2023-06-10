@@ -8,12 +8,13 @@ fn main() {
     }
     println!("The value of x is: {x}");
 
-    let x = (500, 6.4, 1);
-    let (x, y, z) = tup;
+    let tup = (500, 6.4, 1);
 
-    println!("The value of y is: {y}");
+    let (_x, _y, _z) = tup;
+
+    println!("The value of y is: {_y}");
     
-    let five_hundred = x.0;
-    let six_point_four = x.1;
-    let one = x.2;
+    let _five_hundred = tup.0;
+    let _six_point_four = tup.1;
+    let _one = tup.2;
 }
