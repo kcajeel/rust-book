@@ -1,5 +1,5 @@
 use rand::Rng;
-use std::{cmp::Ordering, io as deez};
+use std::{cmp::Ordering, io};
 
 fn main() {
     println!("Guess the number!");
@@ -11,7 +11,7 @@ fn main() {
         let mut guess = String::new();
         let _apples = 5;
 
-        deez::stdin()
+        io::stdin()
             .read_line(&mut guess)
             .expect("Failed to read line");
 
