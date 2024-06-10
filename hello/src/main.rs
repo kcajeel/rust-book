@@ -1,7 +1,9 @@
 use std::{
     fs,
     io::{BufRead, BufReader, Write},
-    net::{TcpListener, TcpStream}, thread, time::Duration,
+    net::{TcpListener, TcpStream},
+    thread,
+    time::Duration,
 };
 
 use hello::ThreadPool;
@@ -11,13 +13,15 @@ fn main() {
     let listener = TcpListener::bind(listen_addr).unwrap();
     let pool = ThreadPool::new(4);
 
-    for stream in listener.incoming() {
+    for stream in listener.incoming().take(2) {
         let stream = stream.unwrap();
-        
+
         pool.execute(|| {
             handle_connection(stream);
         });
     }
+
+    println!("Shutting down.");
 }
 
 fn handle_connection(mut stream: TcpStream) {
@@ -36,7 +40,11 @@ fn handle_connection(mut stream: TcpStream) {
     let contents = fs::read_to_string(filename).unwrap();
     let length = contents.len();
 
-    let response = format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
+    let response = format!(
+        "{}\r\nContent-Length: {}\r\n\r\n{}",
+        status_line, length, contents
+    );
 
     stream.write_all(response.as_bytes()).unwrap();
+    stream.flush().unwrap();
 }
