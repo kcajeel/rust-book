@@ -4,14 +4,17 @@ use std::{
     net::{TcpListener, TcpStream}, thread, time::Duration,
 };
 
+use hello::ThreadPool;
+
 fn main() {
     let listen_addr = "127.0.0.1:7878";
     let listener = TcpListener::bind(listen_addr).unwrap();
+    let pool = ThreadPool::new(4);
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();
         
-        thread::spawn(|| {
+        pool.execute(|| {
             handle_connection(stream);
         });
     }
